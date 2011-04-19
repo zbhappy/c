@@ -120,8 +120,9 @@ node *create_link(int n)
     node *p = NULL;
     node *head = NULL;
     int i;
-
+    
     p = head = malloc(sizeof(node));
+
     if(p == NULL)
     {
         perror("malloc");
