@@ -20,11 +20,79 @@ void print_link(node *head);
 node *add_link(node *head);
 node *delete_link(node *head);
 
+void save_link(node *head)
+{
+    FILE *fp;
+    node *p = head;
+
+    fp = fopen("text1", "r+");
+    if(fp == NULL)
+    {
+        perror("open");
+        exit(0);
+    }
+
+    while(p != NULL)
+    {
+        fprintf(fp, "%d\t%s\n", p->number, p->name);
+        p = p->next;
+    }
+    fclose(fp);
+}
+
+node *load_link(void)
+{
+    FILE *fp;
+    int num;
+    char na[20];
+    node *p;
+    node *head;
+
+    fp = fopen("text1", "r+");
+    if(fp == NULL)
+    {
+        perror("open");
+        exit(0);
+    }
+
+
+    if(fscanf(fp, "%d%s", &num, na) != EOF)
+    {
+        p = malloc(sizeof(node));
+        if(p == NULL)
+        {
+            perror("malloc");
+            exit(0);
+        }
+        p->number - num;
+        strcpy(p->name, na);
+        p->next = NULL;
+        head = p;
+    }
+
+    while(fscanf(fp, "%d\t%s", &num, na) != EOF)
+    {
+        p->next = malloc(sizeof(node));
+
+        if(p->next == NULL)
+        {
+            perror("malloc");
+            exit(0);
+        }
+        p->next->number - num;
+        strcpy(p->next->name, na);
+        p->next->next = NULL;
+
+    }
+    return head;
+
+}
 int main(int argc, const char *argv[])
 {
 
     int n = 0;
     node *head = NULL;
+    head = load_link();
 
     while(1)
     {
@@ -33,10 +101,12 @@ int main(int argc, const char *argv[])
         {
             case 1: head = add_link(head);break;
             case 2: head = delete_link(head);break;
-            case 3: print_link(head);break;
+            case 3: head = load_link();print_link(head);break;
             case 4: n = sum_link(head);break;
             case 5: j_game(head, n);break;
-            case 6: return 0;
+            case 6: save_link(head);break;
+  
+            case 7: return 0;
             default: break;
         }
     }
@@ -61,7 +131,7 @@ void j_game(node *head, int n)
             free(q);
             count = 0;
             total++;
-            
+
 
         }
         else
@@ -79,7 +149,7 @@ void j_game(node *head, int n)
             }
         }
     }
-    
+
 }
 
 int sum_link(node *head)
@@ -111,7 +181,8 @@ void print_list(void)
     printf("3. print link\n");
     printf("4. link note total\n");
     printf("5. game\n");
-    printf("6. exit\n");
+    printf("6. save\n");
+    printf("7. exit\n");
 }
 
 /*node create*/
@@ -120,7 +191,7 @@ node *create_link(int n)
     node *p = NULL;
     node *head = NULL;
     int i;
-    
+
     p = head = malloc(sizeof(node));
 
     if(p == NULL)
@@ -184,12 +255,12 @@ node *add_link(node *head)
     printf("input number and name:\n");
     scanf("%d%s", &p->number, p->name);
     p->next = NULL;
-    
+
     if(ptr == NULL)
     {
         return p;
     }
-    
+
     if(p->number < ptr->number)
     {
         p->next = ptr;
@@ -204,7 +275,7 @@ node *add_link(node *head)
     p->next = ptr->next;
     ptr->next = p;
 
-    
+
     return head;
 }
 
