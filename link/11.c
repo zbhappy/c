@@ -25,7 +25,7 @@ void save_link(node *head)
     FILE *fp;
     node *p = head;
 
-    fp = fopen("text1", "r+");
+    fp = fopen("text1", "w+");
     if(fp == NULL)
     {
         perror("open");
@@ -46,7 +46,7 @@ node *load_link(void)
     int num;
     char na[20];
     node *p;
-    node *head;
+    node *head = NULL;
 
     fp = fopen("text1", "r+");
     if(fp == NULL)
@@ -64,7 +64,7 @@ node *load_link(void)
             perror("malloc");
             exit(0);
         }
-        p->number - num;
+        p->number = num;
         strcpy(p->name, na);
         p->next = NULL;
         head = p;
@@ -79,9 +79,10 @@ node *load_link(void)
             perror("malloc");
             exit(0);
         }
-        p->next->number - num;
+        p->next->number = num;
         strcpy(p->next->name, na);
         p->next->next = NULL;
+        p = p->next;
 
     }
     return head;
@@ -93,7 +94,6 @@ int main(int argc, const char *argv[])
     int n = 0;
     node *head = NULL;
     head = load_link();
-
     while(1)
     {
         print_list();
@@ -101,7 +101,7 @@ int main(int argc, const char *argv[])
         {
             case 1: head = add_link(head);break;
             case 2: head = delete_link(head);break;
-            case 3: head = load_link();print_link(head);break;
+            case 3: print_link(head);break;
             case 4: n = sum_link(head);break;
             case 5: j_game(head, n);break;
             case 6: save_link(head);break;
